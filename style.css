@@ -1,0 +1,404 @@
+/* === style.css — Updated Version: NEW Hero with Slider, OLD Hero with NEW Profile Image Block, NEW Work Experience Section === */
+
+:root {
+  --black: #0a0a0a;
+  --dark: #111;
+  --gold: #d4af37;
+  --white: #fff;
+  --gray: #ccc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* ======================= NEW HERO SECTION (Top section, contains the slider) ======================= */
+.new-hero {
+  position: relative;
+  height: 520px; /* Same height as the old slider */
+  overflow: hidden;
+  display: flex; /* Flex to potentially center content over slider if needed */
+  align-items: center;
+  justify-content: center;
+  background: var(--dark); /* Fallback background if no slides load */
+}
+
+.slides-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Slides behind content/overlay */
+}
+
+.slide img,
+.slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.new-hero-overlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.85)); /* Example overlay */
+  /* filter: blur(2px) brightness(0.7); /* Optional: Apply blur/brightness to the slider */
+  z-index: 2; /* Overlay behind content */
+  pointer-events: none;
+}
+
+
+/* ======================= OLD HERO SLIDER (Below new hero, contains ONLY the NEW centered Profile Image block) ======================= */
+.hero-slider {
+  background: var(--dark); /* Solid background for the section with profile/text */
+  display: flex; /* استخدام flexbox */
+  justify-content: center; /* محاذاة المحتوى (الـ .about) أفقيًا في المنتصف */
+  align-items: center; /* محاذاة المحتوى (الـ .about) رأسيًا في المنتصف */
+  padding: 70px 0; /* Add some vertical padding */
+  min-height: 300px; /* Minimum height to ensure space for the centered block */
+  position: relative; /* For z-index if needed */
+  z-index: 2; /* Ensure it appears above the main body background */
+}
+
+/* No need for ::before or slides-container here */
+
+
+/* ======================= ABOUT SECTION (Inside OLD Hero Slider, centered NEW image block) ======================= */
+.about {
+  display: flex; /* جعل العناصر (الصورة والزر) تظهر جنب بعض */
+  flex-direction: column; /* جعل الصورة فوق الزر */
+  align-items: center; /* محاذاة العناصر أفقيًا في المنتصف */
+  padding: 20px; /* تباعد داخلي */
+  background: transparent; /* جعل خلفية الجروب شفافة */
+  gap: 20px; /* تباعد بين الصورة والزر */
+  z-index: 3; /* تأكد من أن الجروب يظهر فوق الخلفية */
+  width: 80%; /* مثلاً، اخلي الجروب ما يزيدش على 80% من عرض السلايدر */
+  max-width: 800px; /* مثلاً، حد أقصى لعرض الجروب */
+}
+
+/* NEW: Style for the new profile section image */
+.new-profile-image {
+  width: 100%; /* Take full width of its container (.about) */
+  max-width: 600px; /* Optional: Limit max width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Optional: Add rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Optional: Add shadow */
+  object-fit: contain; /* Ensure the entire image is visible within its container */
+}
+
+.gold-btn {
+  background: var(--gold);
+  color: #000;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.gold-btn:hover {
+  background: #f2cf5b;
+}
+
+
+/* ======================= NEW WORK EXPERIENCE SECTION ======================= */
+.work-experience-section {
+  display: none; /* Initially hidden */
+  background: var(--dark);
+  padding: 40px 20px; /* Add padding */
+  text-align: center; /* Center content like h2 */
+  /* margin-top: 20px; /* Add space from the hero section */
+  position: relative; /* For z-index if needed */
+  z-index: 3; /* Ensure it appears above other content if needed */
+}
+
+.work-experience-section h2 {
+  margin-bottom: 20px; /* Add space below the heading */
+  color: var(--gold); /* Use gold color for heading */
+}
+
+/* NEW: Style for the grid container */
+.work-experience-grid {
+  display: grid; /* Use grid for layout */
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  gap: 20px; /* Add gap between grid items */
+  justify-items: center; /* Center items within grid cells horizontally */
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center the whole grid container */
+  align-content: center; /* Align rows vertically */
+  width: 100%; /* Ensure the grid takes full width */
+  max-width: 1200px; /* Optional: Limit max width and center it */
+  margin: 0 auto; /* Center the grid container */
+  padding: 20px; /* Add padding inside the grid container */
+  box-sizing: border-box; /* Include padding/border in width calculation */
+}
+
+/* NEW: Style for each experience item */
+.work-experience-grid .exp-item {
+  background-color: #222; /* Background for each item */
+  border: 1px solid #333; /* Border for each item */
+  border-radius: 8px; /* Rounded corners */
+  padding: 15px; /* Add padding inside each item */
+  text-align: center; /* Center text inside each item */
+  width: 100%; /* Ensure item takes full width of its grid cell */
+  /* NEW: Add a minimum height to ensure consistent item size */
+  min-height: 120px; /* Adjust this value as needed */
+  /* NEW: Add display flex and flex-direction column to better control internal layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically within the item */
+  align-items: center; /* Center content horizontally within the item */
+  box-sizing: border-box; /* Include padding/border in width calculation */
+  transition: transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.work-experience-grid .exp-item:hover {
+  transform: translateY(-5px); /* Lift item slightly on hover */
+}
+
+/* NEW: Style for the company name inside the item */
+.work-experience-grid .exp-item .company-name {
+  font-size: 1.3rem; /* Make company name larger */
+  font-weight: bold;
+  color: var(--gold); /* Use gold color for company name */
+  display: block; /* Ensure it's a block element */
+  margin-bottom: 5px; /* Add space below the name */
+  /* NEW: Add word-break to handle long company names */
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* NEW: Style for the date and role inside the item */
+.work-experience-grid .exp-item .date-role {
+  font-size: 0.9rem; /* Normal size for date and role */
+  color: var(--gray); /* Use gray color */
+  display: block; /* Ensure it's a block element */
+  /* NEW: Add word-break to handle long date/role strings */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  /* No margin-top needed as it's on the same "line" visually due to grid */
+}
+
+/* NEW: Style for the close button */
+.close-btn {
+  background: var(--gold);
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px; /* Add space above the button */
+  transition: background-color 0.3s ease; /* Add transition for hover effect */
+}
+
+.close-btn:hover {
+  background: #f2cf5b; /* Lighter gold on hover */
+}
+
+
+/* ======================= PROJECT FILTER NAV ======================= */
+.project-nav {
+  text-align: center;
+  margin: 40px 0 20px;
+}
+
+.project-nav button {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid #333;
+  padding: 8px 18px;
+  margin: 0 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.project-nav button:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ======================= PROJECTS ======================= */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 0 60px 70px;
+}
+
+.project-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  height: 380px;
+}
+
+.project-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .3s;
+}
+
+.hover-layer {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: .3s;
+}
+
+.project-item:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.5);
+}
+
+.project-item:hover .hover-layer {
+  opacity: 1;
+}
+
+.view-btn {
+  background: var(--gold);
+  padding: 10px 18px;
+  color: #000;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ======================= CLIENTS (Updated Style) ======================= */
+.clients {
+  text-align: center;
+  padding: 40px;
+}
+
+.client-logos {
+  margin-top: 20px;
+  display: grid; /* Use grid for layout */
+  grid-template-columns: repeat(10, 1fr); /* 10 columns */
+  gap: 30px; /* Keep the gap */
+  justify-items: center; /* Center items within grid cells */
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center the whole grid container */
+  align-content: center; /* Align rows vertically if fewer than full rows */
+}
+
+.client-logos img {
+  height: 80px; /* Increase the height to make logos larger */
+  /* filter: grayscale(1); /* Keep grayscale if desired */
+  opacity: 0.8; /* Keep opacity if desired */
+  max-width: 100%; /* Ensure logos don't overflow their grid cell */
+  object-fit: contain; /* Maintain aspect ratio */
+  transition: opacity 0.3s ease; /* Add transition for hover effect */
+}
+
+.client-logos img:hover {
+  opacity: 1; /* Increase opacity on hover */
+}
+
+/* ======================= FOOTER ======================= */
+footer {
+  padding: 30px;
+  text-align: center;
+  border-top: 1px solid #222;
+}
+
+.social-links a {
+  color: var(--gold);
+  margin: 0 10px;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
+
+/* ======================= RESPONSIVE ======================= */
+@media (max-width: 1200px) {
+  .work-experience-grid {
+    grid-template-columns: repeat(4, 1fr); /* Reduce columns on smaller screens */
+  }
+  .client-logos {
+    grid-template-columns: repeat(8, 1fr); /* Reduce columns on smaller screens */
+  }
+}
+
+@media (max-width: 992px) {
+  .work-experience-grid {
+    grid-template-columns: repeat(3, 1fr); /* Further reduce columns */
+  }
+  .client-logos {
+    grid-template-columns: repeat(6, 1fr); /* Further reduce columns */
+  }
+}
+
+@media (max-width: 768px) {
+  .work-experience-grid {
+    grid-template-columns: repeat(2, 1fr); /* Further reduce columns */
+  }
+  .client-logos {
+    grid-template-columns: repeat(4, 1fr); /* Further reduce columns */
+  }
+  .client-logos img {
+    height: 60px; /* Reduce logo size on small screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .work-experience-grid {
+    grid-template-columns: repeat(1, 1fr); /* Single column on very small screens */
+  }
+  .client-logos {
+    grid-template-columns: repeat(3, 1fr); /* Further reduce columns */
+  }
+  .client-logos img {
+    height: 50px; /* Further reduce logo size */
+  }
+}
+
+@media (max-width: 900px) {
+  .new-hero {
+    height: 300px; /* Smaller height on mobile */
+  }
+
+  .hero-slider {
+    flex-direction: column; /* عند الشاشات الصغيرة، اجعل الجروب (الصورة والنص) عمودي */
+    justify-content: flex-start; /* خلي الجروب يظهر من الأعلى */
+    align-items: center; /* ويبقى محاذي في المنتصف أفقيًا */
+    padding-top: 50px; /* تباعد من الأعلى */
+    padding: 40px 20px; /* Adjust padding */
+  }
+
+  .about {
+    flex-direction: column; /* عند الشاشات الصغيرة، اجعل الصورة والزر عموديين */
+    text-align: center; /* محاذاة النص في المنتصف */
+    width: 90%; /* اخلي الجروب ياخذ عرض اكبر */
+    padding: 20px 0; /* تقليل الـ padding */
+  }
+
+  .new-profile-image {
+      max-width: 90%; /* Adjust max width on small screens */
+  }
+
+  .work-experience-section {
+    width: 90%;
+  }
+}

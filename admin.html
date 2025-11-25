@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Abdelwahab Studio</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script defer src="admin.js"></script>
+</head>
+<body>
+
+  <h1>Dashboard Control Panel</h1>
+  <p>Use this dashboard to edit your website content.</p>
+
+  <section>
+    <h2>New Hero Slider (Top Section)</h2>
+    <button id="addNewSlideBtn">Add Slide (Image/Video URL)</button>
+    <ul id="newSlideList"></ul>
+  </section>
+
+  <section>
+    <h2>About Section (Profile Image)</h2>
+    <!-- NEW: File input for profile section image -->
+    <input type="file" id="aboutProfileImageFile" accept="image/*" />
+    <button id="addAboutImageFromFile">Upload Profile Section Image</button>
+    <!-- Keep the old URL input for backup or direct URL entry -->
+    <input id="aboutProfilePhoto" placeholder="Or Enter Profile Section Image URL (e.g., assets/images/profile-section.jpg)" />
+    <button id="saveAbout">Save Profile Image</button> <!-- Changed button text -->
+    <button id="saveAllData">Save All Data to Website</button>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    <input id="expStartYear" placeholder="Start Year (e.g., 2020)" />
+    <input id="expEndYear" placeholder="End Year (e.g., 2022, or 'Present')" />
+    <input id="expCompany" placeholder="Company Name" />
+    <input id="expRole" placeholder="Your Role/Position at Company" />
+    <button id="addExp">Add Experience Entry</button>
+    <ul id="expList"></ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <input id="projectLink" placeholder="Behance Link (or full project URL)" />
+    <input id="projectImage" placeholder="Project Image URL (e.g., assets/images/project.jpg)" />
+    <select id="projectType">
+      <option value="social">Social Media</option>
+      <option value="branding">Branding</option>
+      <option value="presentation">Presentation</option>
+    </select>
+    <button id="addProject">Add Project</button>
+    <ul id="projectList"></ul>
+  </section>
+
+  <section>
+    <h2>Clients / Brands</h2>
+    <input id="clientLogoUrl" placeholder="Client Logo URL (e.g., assets/images/logo.png)" />
+    <button id="addClientFromUrl">Add Client Logo from URL</button>
+    <ul id="clientList"></ul>
+  </section>
+
+</body>
+</html>

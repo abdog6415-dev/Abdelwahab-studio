@@ -1,0 +1,74 @@
+<!-- Full index.html - Updated Version: NEW Hero with Slider, OLD Hero with NEW Profile Image Block, NEW Work Experience Section -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abdelwahab Studio</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Ensure data.js is loaded BEFORE script.js -->
+  <script src="data.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <!-- NEW HERO SECTION (At the top, contains the slider) -->
+  <header class="new-hero">
+    <div class="slides-container" id="heroSlides">
+      <!-- Slides will be inserted here by script.js -->
+    </div>
+    <div class="new-hero-overlay"></div> <!-- Optional: overlay for the new hero -->
+  </header>
+
+  <!-- OLD HERO SLIDER (Now below the new hero, contains ONLY the NEW centered Profile Image block) -->
+  <header class="hero-slider">
+    <!-- ABOUT SECTION - Now INSIDE the OLD hero slider, centered within its own space, replaced by image -->
+    <section class="about" id="about">
+      <!-- NEW: Replace text and profile photo with a single image -->
+      <img src="assets/images/your-new-profile-section-image.jpg" alt="Profile Section" class="new-profile-image"> <!-- NEW: Image to replace the block -->
+      <!-- Optional: Keep the button if you still want to open the Work Experience section -->
+      <button class="gold-btn" id="openExperience">View Work Experience</button> <!-- NEW: Button to open NEW section -->
+    </section>
+  </header>
+
+  <!-- NEW WORK EXPERIENCE SECTION (Below the OLD hero, hidden initially) -->
+  <section class="work-experience-section" id="workExperienceSection">
+    <h2>Work Experience</h2>
+    <div class="work-experience-grid" id="workExperienceGrid">
+      <!-- Experience items will be inserted here by script.js -->
+    </div>
+    <button class="close-btn" id="closeExperience">Close X</button> <!-- NEW: Button to close the section -->
+  </section>
+
+  <!-- PROJECT FILTER NAV - Static, but filters dynamic content -->
+  <nav class="project-nav">
+    <button data-filter="all">All</button> <!-- Added 'All' filter -->
+    <button data-filter="social">Social Media</button>
+    <button data-filter="branding">Branding</button>
+    <button data-filter="presentation">Presentation</button>
+  </nav>
+
+  <!-- PROJECTS SECTION - Dynamic content container -->
+  <section class="projects" id="projects">
+    <!-- Project items will be inserted here by script.js -->
+  </section>
+
+  <!-- CLIENTS SECTION - Dynamic content container -->
+  <section class="clients">
+    <h2>Brands I've Worked With</h2>
+    <div class="client-logos">
+      <!-- Client logos will be inserted here by script.js -->
+    </div>
+  </section>
+
+  <!-- FOOTER - Dynamic social links container -->
+  <footer>
+    <p>© 2025 Abdelwahab Studio</p>
+    <div class="social-links">
+      <!-- Social links will be inserted here by script.js -->
+    </div>
+  </footer>
+</body>
+
+</html>
