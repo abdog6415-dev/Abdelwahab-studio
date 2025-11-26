@@ -1,4 +1,4 @@
-// script.js - Updated Version to use data.js and LocalStorage for NEW structure and NEW Experience format, Updated Clients Style, NEW Work Experience Grid Layout
+// script.js - Updated Version to use data.js and LocalStorage for NEW structure and NEW Experience format, Updated Clients Style, NEW Work Experience Grid Layout, NEW Profile Image Section
 
 // Function to get data prioritizing LocalStorage, then falling back to data.js
 function getData() {
@@ -60,25 +60,23 @@ function showSlides() {
   setTimeout(showSlides, 4000);
 }
 
-// ================= ABOUT SECTION & NEW WORK EXPERIENCE SECTION =================
-// Function to populate the About section
+// ================= ABOUT SECTION & NEW PROFILE IMAGE & NEW WORK EXPERIENCE SECTION =================
+// Function to populate the NEW Profile Image section (replaces old text and profile photo)
 function loadAboutSection() {
   const data = getData();
-  const aboutSection = document.getElementById('about');
+  // Target the new profile image element
+  const profileImageElement = document.querySelector('.new-profile-image'); // Select the image by its class
 
-  if (!aboutSection) return;
+  if (profileImageElement) {
+    // Use the profilePhoto URL from the data (either from LocalStorage or data.js)
+    profileImageElement.src = data.about.profilePhoto || "assets/images/your-default-profile-section-image.jpg"; // Ensure a default image path if needed
+    profileImageElement.alt = "Profile Section"; // Add alt text for accessibility
+  }
 
-  // Populate left side with data
-  const nameElement = aboutSection.querySelector('.name');
-  const roleElement = aboutSection.querySelector('.role');
-  const experienceElement = aboutSection.querySelector('.experience-years');
-  const profileImageElement = aboutSection.querySelector('.profile-photo');
-
-  if (nameElement) nameElement.textContent = data.about.name || "Your Name";
-  if (roleElement) roleElement.textContent = data.about.role || "Graphic Designer";
-  if (experienceElement) experienceElement.textContent = data.about.experienceYears || "X Years Experience";
-  if (profileImageElement) profileImageElement.src = data.about.profilePhoto || "assets/images/profile.jpg"; // Ensure a default image path if needed
+  // The old .name, .role, .experience-years elements are no longer used here
+  // They should be removed from index.html or their content should be empty/handled differently if needed elsewhere
 }
+
 
 // NEW: Function to populate the NEW Work Experience section
 function loadWorkExperienceSection() {
@@ -234,7 +232,7 @@ function loadSocialLinks() {
 // ================= INITIALIZATION (Updated for NEW structure) =================
 // Function to initialize the page after loading data
 function initPage() {
-  loadAboutSection();
+  loadAboutSection(); // Load the NEW profile image
   // loadExperienceSection(); // Remove the old function call
   loadProjectsSection();
   loadClientsSection(); // Load the updated client style
