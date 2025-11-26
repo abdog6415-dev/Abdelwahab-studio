@@ -1,9 +1,9 @@
-// admin.js - Updated Version for Admin Dashboard compatible with NEW Profile Image Section
+// admin.js - Updated Version for Admin Dashboard compatible with main index.js, NEW Experience structure, NEW Client Style, NEW About Image Upload, ALL Uploads via Buttons
 
 // Load data from LocalStorage or fallback to initial data structure
 let siteData = JSON.parse(localStorage.getItem("siteData")) || {
   heroSlides: [],
-  about: { name: "", role: "", experienceYears: "", profilePhoto: "assets/images/profile.jpg" }, // Keep the key name as profilePhoto for compatibility with existing script.js logic, even though it's now the section image
+  about: { name: "", role: "", experienceYears: "", profilePhoto: "assets/images/your-default-profile-section-image.jpg" }, // Keep the key name as profilePhoto for compatibility with existing script.js logic, even though it's now the section image
   experience: [], // Updated structure: [{ startYear, endYear, company, role }, ...]
   projects: [],
   clients: [],
@@ -19,52 +19,51 @@ function saveData() {
 }
 
 
-// ================== NEW HERO SLIDER (Top Section) ==================
+// ================== NEW HERO SLIDER (Top Section) - Upload ==================
 
-// Add slide to the NEW top slider using URL input
-document.getElementById("addNewSlideBtn").onclick = () => {
-  const url = prompt("Enter the full URL of the Image or Video file (e.g., assets/images/slide.jpg or assets/videos/slide.mp4):", "");
-  if (!url) return;
+// NEW: Add slide to the NEW top slider using File input
+document.getElementById("addNewSlideFromFile").onclick = () => {
+    const fileInput = document.getElementById("newHeroUpload");
+    const file = fileInput.files[0]; // Get the selected file
 
-  // Determine type based on file extension (simple check)
-  let type = "image"; // default
-  if (url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm') || url.toLowerCase().endsWith('.ogg')) {
-    type = "video";
-  } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg') || url.toLowerCase().endsWith('.png') || url.toLowerCase().endsWith('.gif')) {
-    type = "image";
-  } else {
-    // If extension is not clear, ask user
-    type = prompt("Is this an 'image' or 'video'? (Enter 'image' or 'video')", "image").toLowerCase();
-    if (type !== 'image' && type !== 'video') {
-        alert("Invalid type. Please enter 'image' or 'video'.");
+    if (!file) {
+        alert("Please select a file first.");
         return;
     }
-  }
 
-  // Validate URL format (basic check)
-  try {
-    new URL(url);
-  } catch (e) {
-    alert("Please enter a valid URL.");
-    return;
-  }
+    // Validate file type (image or video)
+    if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+        alert("Please select an image or video file (e.g., JPG, PNG, MP4, WEBM).");
+        return;
+    }
 
-  siteData.heroSlides.push({ type: type, src: url });
-  saveData(); // Save immediately
-  loadNewSlides(); // Refresh the list display
+    // Create a temporary Blob URL for preview in the admin panel only
+    const blobUrl = URL.createObjectURL(file);
+
+    // Determine type based on file type
+    const type = file.type.startsWith("image/") ? "image" : "video";
+
+    // Update the siteData object with the Blob URL for the slider
+    siteData.heroSlides.push({ type: type, src: blobUrl }); // Store the temporary blob URL
+    saveData(); // Save immediately
+    loadNewSlides(); // Refresh the list display
+    // Optional: Clear the file input
+    fileInput.value = "";
 };
 
 
-// Load and display the list of NEW slides
+// Load and display the list of NEW slides (with delete option)
 function loadNewSlides() {
   const list = document.getElementById("newSlideList");
   if (!list) return;
   list.innerHTML = "";
 
   siteData.heroSlides.forEach((slide, index) => {
+    // Display type and a shortened version of the blob URL or a generic name
+    const displaySrc = slide.src.startsWith("blob:") ? `Blob URL (${slide.type.toUpperCase()})` : slide.src;
     const li = document.createElement("li");
     li.innerHTML = `
-      <span>[${slide.type.toUpperCase()}] ${slide.src}</span>
+      <span>[${slide.type.toUpperCase()}] ${displaySrc}</span>
       <button onclick="deleteNewSlide(${index})">Delete</button>
     `;
     list.appendChild(li);
@@ -75,6 +74,10 @@ function loadNewSlides() {
 // Delete a slide from the NEW top slider
 function deleteNewSlide(index) {
   if (confirm("Are you sure you want to delete this slide from the top slider?")) {
+    // If it was a Blob URL, revoke it to free memory
+    if (siteData.heroSlides[index].src.startsWith("blob:")) {
+        URL.revokeObjectURL(siteData.heroSlides[index].src);
+    }
     siteData.heroSlides.splice(index, 1);
     saveData();
     loadNewSlides();
@@ -82,7 +85,7 @@ function deleteNewSlide(index) {
 };
 
 
-// ================== ABOUT SECTION (NEW Profile Image Only) ==================
+// ================== ABOUT SECTION (NEW Profile Image Only) - Upload ==================
 
 // NEW: Add profile section image using File input
 document.getElementById("addAboutImageFromFile").onclick = () => {
@@ -104,49 +107,53 @@ document.getElementById("addAboutImageFromFile").onclick = () => {
     const blobUrl = URL.createObjectURL(file);
 
     // Update the siteData object with the Blob URL for the profile section image
-    // Note: This Blob URL is temporary and only valid in this browser session
-    // For persistent storage, you'd typically upload the file to a server and store the server URL
     siteData.about.profilePhoto = blobUrl; // Store the temporary blob URL in the profilePhoto field
-    // Optional: Clear the URL input field as it's now overridden by the file input
-    document.getElementById("aboutProfilePhoto").value = "";
+    saveData(); // Save immediately
+    loadAboutImage(); // Refresh the display list
+    // Optional: Clear the file input
+    fileInput.value = "";
+};
 
-    // Optional: Show a message or update the UI to reflect the file is selected
-    console.log("Profile section image selected and stored as Blob URL:", blobUrl);
+
+// NEW: Load and display the profile image (with delete option)
+function loadAboutImage() {
+  const list = document.getElementById("aboutImageList");
+  if (!list) return;
+  list.innerHTML = "";
+
+  // Display the current image (if it's a blob URL)
+  if (siteData.about.profilePhoto && siteData.about.profilePhoto.startsWith("blob:")) {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span>Profile Section Image: Blob URL</span>
+      <button onclick="deleteAboutImage()">Delete</button>
+    `;
+    list.appendChild(li);
+  }
+};
+
+
+// NEW: Delete the profile image (revert to default)
+function deleteAboutImage() {
+  if (confirm("Are you sure you want to delete the profile section image? It will revert to the default.")) {
+    // Revoke the old blob URL if it exists
+    if (siteData.about.profilePhoto && siteData.about.profilePhoto.startsWith("blob:")) {
+        URL.revokeObjectURL(siteData.about.profilePhoto);
+    }
+    // Set to default
+    siteData.about.profilePhoto = "assets/images/your-default-profile-section-image.jpg";
+    saveData();
+    loadAboutImage(); // Refresh the display list
+  }
 };
 
 
 // Save updated about information (only the image now)
 document.getElementById("saveAbout").onclick = () => {
-  // Get the value from the URL input field, which might be empty if a file was just selected
-  const profilePhotoUrl = document.getElementById("aboutProfilePhoto").value.trim();
-
-  // If the URL field is empty, rely on the Blob URL stored in siteData.about.profilePhoto (if any)
-  // If both are empty, use the default
-  let finalProfilePhoto = profilePhotoUrl;
-  if (!finalProfilePhoto && siteData.about.profilePhoto && siteData.about.profilePhoto.startsWith("blob:")) {
-      // If URL field is empty and current siteData.about.profilePhoto is a blob URL (from file upload), keep it
-      finalProfilePhoto = siteData.about.profilePhoto;
-  } else if (!finalProfilePhoto) {
-      // If both are empty, set to default
-      finalProfilePhoto = "assets/images/profile.jpg"; // Change this to your default profile *section* image path
-  }
-
-  // Validate profile photo URL (basic check) only if it's not a Blob URL
-  if (finalProfilePhoto && !finalProfilePhoto.startsWith("blob:") && finalProfilePhoto !== "assets/images/profile.jpg") { // Skip validation if default or blob
-      try {
-        new URL(finalProfilePhoto);
-      } catch (e) {
-        alert("Please enter a valid Profile Section Image URL.");
-        return;
-      }
-  }
-
-  // Update ONLY the profilePhoto in siteData.about, keep other fields as they are (or empty)
-  // If you want to completely remove name, role, experienceYears from siteData.about, you can set them to empty strings here
-  siteData.about = { ...siteData.about, profilePhoto: finalProfilePhoto }; // Update the object, keeping other fields
-  // OR: siteData.about = { name: "", role: "", experienceYears: "", profilePhoto: finalProfilePhoto }; // To reset other fields
-
-  saveData(); // Save changes
+  // Since the image is already stored in siteData.about.profilePhoto via the upload button,
+  // this button just ensures it's saved in LocalStorage if needed (it's already saved by the upload button)
+  // We can just show an alert or call saveData again if necessary
+  saveData(); // Save changes (redundant if saved by upload, but safe)
   alert("Profile section image updated and saved!");
 };
 
@@ -211,30 +218,44 @@ function deleteExperience(index) {
 };
 
 
-// ================== PROJECTS SECTION ==================
+// ================== PROJECTS SECTION - Upload ==================
 
-document.getElementById("addProject").onclick = () => {
-  const imgSrc = document.getElementById("projectImage").value.trim();
-  const link = document.getElementById("projectLink").value.trim();
-  const type = document.getElementById("projectType").value;
+// NEW: Add project using File input
+document.getElementById("addProjectFromFile").onclick = () => {
+    const fileInput = document.getElementById("projectImageFile");
+    const file = fileInput.files[0]; // Get the selected file
+    const link = document.getElementById("projectLink").value.trim();
+    const type = document.getElementById("projectType").value;
 
-  if (!imgSrc || !link) {
-    alert("Please provide both the Image URL and the Project Link.");
-    return;
-  }
+    if (!file || !link) {
+        alert("Please select an image file and provide a project link.");
+        return;
+    }
 
-  // Validate URLs (basic check)
-  try {
-    new URL(imgSrc);
-    new URL(link);
-  } catch (e) {
-    alert("Please enter valid URLs for both Image and Link.");
-    return;
-  }
+    // Validate file type (image)
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file (e.g., JPG, PNG, GIF).");
+        return;
+    }
 
-  siteData.projects.push({ img: imgSrc, link, type });
-  saveData();
-  loadProjects();
+    // Validate link URL (basic check)
+    try {
+        new URL(link);
+    } catch (e) {
+        alert("Please enter a valid project link URL.");
+        return;
+    }
+
+    // Create a temporary Blob URL for the image
+    const blobUrl = URL.createObjectURL(file);
+
+    // Add to data array
+    siteData.projects.push({ img: blobUrl, link, type }); // Store the temporary blob URL for the image
+    saveData(); // Save immediately
+    loadProjects(); // Refresh the list display
+    // Clear inputs after adding
+    fileInput.value = "";
+    document.getElementById("projectLink").value = "";
 };
 
 
@@ -244,9 +265,11 @@ function loadProjects() {
   list.innerHTML = "";
 
   siteData.projects.forEach((project, index) => {
+    // Display type and a shortened version of the blob URL or a generic name
+    const displayImg = project.img.startsWith("blob:") ? `Blob URL (${project.type.toUpperCase()})` : project.img;
     const li = document.createElement("li");
     li.innerHTML = `
-      <span>[${project.type.toUpperCase()}] ${project.link}</span>
+      <span>[${project.type.toUpperCase()}] ${project.link} - Image: ${displayImg}</span>
       <button onclick="deleteProject(${index})">Delete</button>
     `;
     list.appendChild(li);
@@ -256,6 +279,10 @@ function loadProjects() {
 
 function deleteProject(index) {
   if (confirm("Are you sure you want to delete this project?")) {
+    // If the image was a Blob URL, revoke it to free memory
+    if (siteData.projects[index].img.startsWith("blob:")) {
+        URL.revokeObjectURL(siteData.projects[index].img);
+    }
     siteData.projects.splice(index, 1);
     saveData();
     loadProjects();
@@ -263,27 +290,33 @@ function deleteProject(index) {
 };
 
 
-// ================== CLIENTS SECTION (Updated WITHOUT File Upload) ==================
+// ================== CLIENTS SECTION - Upload ==================
 
-// Add client logo using URL input (ONLY URL now)
-document.getElementById("addClientFromUrl").onclick = () => {
-  const logoSrc = document.getElementById("clientLogoUrl").value.trim(); // Use the URL input field
-  if (!logoSrc) {
-    alert("Please provide a client logo URL.");
-    return;
-  }
+// NEW: Add client logo using File input
+document.getElementById("addClientFromFile").onclick = () => {
+    const fileInput = document.getElementById("clientLogoFile");
+    const file = fileInput.files[0]; // Get the selected file
 
-  // Validate URL (basic check)
-  try {
-    new URL(logoSrc);
-  } catch (e) {
-    alert("Please enter a valid logo URL.");
-    return;
-  }
+    if (!file) {
+        alert("Please select a file first.");
+        return;
+    }
 
-  siteData.clients.push(logoSrc); // Store the URL
-  saveData();
-  loadClients();
+    // Validate file type (image)
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file (e.g., JPG, PNG, GIF).");
+        return;
+    }
+
+    // Create a temporary Blob URL for the logo
+    const blobUrl = URL.createObjectURL(file);
+
+    // Add to data array
+    siteData.clients.push(blobUrl); // Store the temporary blob URL
+    saveData(); // Save immediately
+    loadClients(); // Refresh the list display
+    // Clear input after adding
+    fileInput.value = "";
 };
 
 
@@ -293,10 +326,11 @@ function loadClients() {
   list.innerHTML = "";
 
   siteData.clients.forEach((logo, index) => {
+    // Display a shortened version of the blob URL or a generic name
+    const displayLogo = logo.startsWith("blob:") ? `Blob URL` : logo;
     const li = document.createElement("li");
-    // Display the logo URL in the admin list
     li.innerHTML = `
-      <span>Logo URL: ${logo}</span>
+      <span>Logo: ${displayLogo}</span>
       <button onclick="deleteClient(${index})">Delete</button>
     `;
     list.appendChild(li);
@@ -306,6 +340,10 @@ function loadClients() {
 
 function deleteClient(index) {
   if (confirm("Are you sure you want to delete this client logo?")) {
+    // If the logo was a Blob URL, revoke it to free memory
+    if (siteData.clients[index].startsWith("blob:")) {
+        URL.revokeObjectURL(siteData.clients[index]);
+    }
     siteData.clients.splice(index, 1);
     saveData();
     loadClients();
@@ -313,25 +351,25 @@ function deleteClient(index) {
 };
 
 
+// ================== SAVE ALL DATA BUTTON ==================
+
+document.getElementById("saveAllData").onclick = () => {
+  saveData(); // This function already shows an alert
+};
+
+
 // ================== INITIAL LOAD ==================
 
 window.onload = () => {
   loadNewSlides();
+  loadAboutImage(); // Load profile image display
   loadExperience(); // Load experience list
-  loadProjects();
+  loadProjects(); // Load project list
   loadClients(); // Load client list
 
-  if (siteData.about) {
-    // Don't pre-populate name, role, experience fields as they are removed from the UI
-    // Only pre-populate the image URL field if it's not a Blob URL
-    if (siteData.about.profilePhoto && !siteData.about.profilePhoto.startsWith("blob:")) {
-        document.getElementById("aboutProfilePhoto").value = siteData.about.profilePhoto;
-    } else {
-        // If it's a blob URL, leave the URL field empty or show a message
-        document.getElementById("aboutProfilePhoto").value = "";
-        console.log("Current profile photo is a Blob URL from a previous file upload.");
-    }
-  }
+  // Pre-populate fields if needed (but for file uploads, we mainly rely on the lists and blob revocation)
+  // For about section, we don't pre-populate name/role/exp as they are removed from UI, just image
+  // The image is handled by loadAboutImage()
 
   loadExperience(); // Load experience list again after initial data fetch
 };
