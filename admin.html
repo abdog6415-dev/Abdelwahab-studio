@@ -14,7 +14,8 @@
 
   <section>
     <h2>New Hero Slider (Top Section)</h2>
-    <button id="addNewSlideBtn">Add Slide (Image/Video URL)</button>
+    <input type="file" id="newHeroUpload" accept="image/*,video/*" />
+    <button id="addNewSlideFromFile">Upload Slide (Image/Video)</button>
     <ul id="newSlideList"></ul>
   </section>
 
@@ -23,9 +24,8 @@
     <!-- NEW: File input for profile section image -->
     <input type="file" id="aboutProfileImageFile" accept="image/*" />
     <button id="addAboutImageFromFile">Upload Profile Section Image</button>
-    <!-- Keep the old URL input for backup or direct URL entry -->
-    <input id="aboutProfilePhoto" placeholder="Or Enter Profile Section Image URL (e.g., assets/images/profile-section.jpg)" />
-    <button id="saveAbout">Save Profile Image</button> <!-- Changed button text -->
+    <ul id="aboutImageList"></ul> <!-- Optional: List to show uploaded image -->
+    <button id="saveAbout">Save Profile Image</button>
     <button id="saveAllData">Save All Data to Website</button>
   </section>
 
@@ -41,21 +41,21 @@
 
   <section>
     <h2>Projects</h2>
+    <input type="file" id="projectImageFile" accept="image/*" />
     <input id="projectLink" placeholder="Behance Link (or full project URL)" />
-    <input id="projectImage" placeholder="Project Image URL (e.g., assets/images/project.jpg)" />
     <select id="projectType">
       <option value="social">Social Media</option>
       <option value="branding">Branding</option>
       <option value="presentation">Presentation</option>
     </select>
-    <button id="addProject">Add Project</button>
+    <button id="addProjectFromFile">Upload Project Image</button>
     <ul id="projectList"></ul>
   </section>
 
   <section>
     <h2>Clients / Brands</h2>
-    <input id="clientLogoUrl" placeholder="Client Logo URL (e.g., assets/images/logo.png)" />
-    <button id="addClientFromUrl">Add Client Logo from URL</button>
+    <input type="file" id="clientLogoFile" accept="image/*" />
+    <button id="addClientFromFile">Upload Client Logo</button>
     <ul id="clientList"></ul>
   </section>
 
